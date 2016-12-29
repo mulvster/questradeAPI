@@ -1,11 +1,11 @@
+require('dotenv').config()
+
 var request = require('request');
 
-var refresh_token= "8FBYOBSpDrsNhL_vZysVOakamfufZgCV0";
-
-// This gets us the access token for authorizing subsequent requests
+// This gets us the access token for authorizing multiple requests
 console.log("getting access token");
 request.get(
-  {url:'https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token=' + refresh_token},
+  {url:'https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token=' + process.env.refresh_token},
   function(err, response, body){
     if(err){
       console.log(err);
@@ -29,7 +29,7 @@ request.get(
       console.log('Make a request');
       request.get(
         {
-          url: api_server + 'v1/markets/quotes/8049',
+          url: api_server + 'v1/markets/candles/38738/startTime=2014-10-01T00:00:00-05:00&endTime=2014-10-20T23:59:59-05:00&interval=OneDay',
           auth:{
             bearer : access_token
           }

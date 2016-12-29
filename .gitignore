@@ -1,2 +1,5 @@
 package.json
 tokenFile
+.DS_Store
+.env
+node_modules/
