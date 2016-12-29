@@ -29,7 +29,7 @@ request.get(
       console.log('Make a request');
       request.get(
         {
-          url: api_server + 'v1/markets/candles/38738/startTime=2014-10-01T00:00:00-05:00&endTime=2014-10-20T23:59:59-05:00&interval=OneDay',
+          url: api_server + 'v1/markets/quotes/8049',
           auth:{
             bearer : access_token
           }
