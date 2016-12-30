@@ -1,11 +1,14 @@
 require('dotenv').config()
 
-var request = require('request');
+const request = require('request');
+
 
 // This gets us the access token for authorizing multiple requests
 console.log("getting access token");
 request.get(
   {url:'https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token=' + process.env.refresh_token},
+  
+//should probably refactor and modularize since using the same function more than twice.
   function(err, response, body){
     if(err){
       console.log(err);
@@ -14,16 +17,17 @@ request.get(
 
     console.log(response.statusCode);
 
-    if(response.statusCode != 200){
-      console.log(body); // If we get here, it is likely to be a 'bad request' because we are using the same refresh_token more than once
+    if(response.statusCode != 200) {
+      console.log(body); 
+      // If we get here, it is likely to be a 'bad request' because we are using the same refresh_token more than once
       return;
     }
 
-    b = JSON.parse(body)
-    var access_token = b.access_token;
-    var api_server = b.api_server;
+    let b = JSON.parse(body)
+    let access_token = b.access_token;
+    let api_server = b.api_server;
 
-    // Let's try to get our account information
+    //this is where we request the information we're looking for from questrade API.
     if(response.statusCode == 200)
     {
       console.log('Make a request');
