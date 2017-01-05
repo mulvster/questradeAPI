@@ -2,14 +2,13 @@ require('dotenv').config()
 
 const request = require('request');
 
-
 // This gets us the access token for authorizing multiple requests
 console.log("getting access token");
 request.get(
   {url:'https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token=' + process.env.refresh_token},
   
 //should probably refactor and modularize since using the same function more than twice.
-  function(err, response, body){
+  function(err, response, body) {
     if(err){
       console.log(err);
       return;
@@ -18,27 +17,28 @@ request.get(
     console.log(response.statusCode);
 
     if(response.statusCode != 200) {
-      console.log(body); 
-      // If we get here, it is likely to be a 'bad request' because we are using the same refresh_token more than once
+      // If we get here its a bad request... can only use refresh token once.
       return;
     }
 
-    let b = JSON.parse(body)
-    let access_token = b.access_token;
-    let api_server = b.api_server;
+    let bodyParse = JSON.parse(body)
+    let access_token = bodyParse.access_token;
+    let api_server = bodyParse.api_server;
 
     //this is where we request the information we're looking for from questrade API.
-    if(response.statusCode == 200)
+    if(response.statusCode === 200)
     {
       console.log('Make a request');
       request.get(
         {
-          url: api_server + 'v1/markets/quotes/8049',
+           //this returns back internal symbol id to use in other calls and for different stock markets. Must have internal symbolID to access candle data
+          url: api_server + 'v1/symbols/search?prefix=BMO', 
+         
           auth:{
             bearer : access_token
           }
         },
-        function(err, response, body){
+        function(err, response, body) {
           if(err){
             console.log(err);
             return;
