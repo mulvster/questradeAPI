@@ -31,8 +31,8 @@ request.get(
       console.log('Make a request');
       request.get(
         {
-           //this returns back internal symbol id to use in other calls and for different stock markets. Must have internal symbolID to access candle data
-          url: api_server + 'v1/symbols/search?prefix=BMO', 
+           
+          url: api_server + 'v1/markets/candles/9292?startTime=2017-01-04T00:00:00-05:00&endTime=2017-01-04T23:59:59-05:00&interval=OneDay', 
          
           auth:{
             bearer : access_token
