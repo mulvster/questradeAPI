@@ -72,7 +72,8 @@ function getCodeMeat(prefixArray, position) {
       } else {
         console.log("response code:", response.statusCode);
       }
-        //recursion
+        //recursion it does everything I want it to do for one value and then the very last thing in the code to do is settimeout and then repeat everything again with the next value defined by position 'i', so long as 'i' is less than the length of the list. if I put anything outside of the stack after the settimeout, It will not work.
+        
         setTimeout(function() {
           i++;
           if (i < prefixArray.length) {
