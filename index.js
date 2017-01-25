@@ -45,8 +45,44 @@ function getAccessToken(prefix) {
   );
 }
 
-function getCodeMeat(prefixArray, position) {
-  let prefix = prefixArray[position];
+
+
+var getQuestradeSymbolFromAPI = function(err, response, body) {
+  if(err){
+    console.log("error", err);
+    return;
+  }
+  if(response.statusCode === 200)
+  {
+    let bodyParse = JSON.parse(body);
+    let firstPrefix = bodyParse.symbols[0].symbol;
+    if (prefix !== firstPrefix) {
+      console.log('ERROR,', prefix, "doesn't equal", firstPrefix);
+    }
+    console.log(prefix + "," + bodyParse.symbols[0].symbolId);
+  } else {
+    console.log("response code:", response.statusCode);
+  }
+}
+
+function getPrefixes(prefixes){
+
+  var i = 0;
+  var intervalHandle = setInterval(function() {
+    if(i > prefixes.length)
+    {
+      clearInterval(intervalHandle);//stop
+    }
+
+    retrievePrefix(prefixes[i]);
+    i++;
+  }, 50); // 20 times a second
+}
+
+
+// getCodeMeat
+function retrievePrefix(prefix) {
+  // let prefix = prefixArray[position];
   request.get(
     {
        //this returns back internal symbol id to use in other calls and for different stock markets. Must have internal symbolID to access candle data
@@ -56,29 +92,6 @@ function getCodeMeat(prefixArray, position) {
       }
     },
     // callback with the body object
-    function(err, response, body) {
-      if(err){
-        console.log("error", err);
-        return;
-      }
-      if(response.statusCode === 200)
-      {
-        let bodyParse = JSON.parse(body);
-        let firstPrefix = bodyParse.symbols[0].symbol;
-        if (prefix !== firstPrefix) {
-          console.log('ERROR,', prefix, "doesn't equal", firstPrefix);
-        }
-        console.log(prefix + "," + bodyParse.symbols[0].symbolId);
-      } else {
-        console.log("response code:", response.statusCode);
-      }
-        //recursion it does everything I want it to do for one value and then the very last thing in the code to do is settimeout and then repeat everything again with the next value defined by position 'i', so long as 'i' is less than the length of the list. if I put anything outside of the stack after the settimeout, It will not work.
-        
-        setTimeout(function() {
-          i++;
-          if (i < prefixArray.length) {
-          getCodeMeat(prefixArray, i);
-          }
-        }, 50); // 20 times a second
-    });
+    getQuestradeSymbolFromAPI
+    );
 }
